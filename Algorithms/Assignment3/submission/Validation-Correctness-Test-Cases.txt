@@ -1,0 +1,153 @@
+ 
+ ................. Generating test cases with 1 to 10 Campers ...................
+
+ 
+For 10 and 11 campers it takes around 7 and 82 seconds
+Where 12 takes forever........Or gives a segmentation fault and Never finishes
+
+
+
+-------============ End of Greedy Algorithm ==============------ 
+
+
+=======-------------Bruteforce Method Done------------============
+
+
+For Test Cases of campers 1 to 10---Best Time according to Greedy Algorithm ===
+[182]
+For Test Cases of campers 1 to 10---Best Time according to BruteForce Method======
+[182]
+
+The Designed Algorithm is giving us the correct ans
+
+
+-------============ End of Greedy Algorithm ==============------ 
+
+
+=======-------------Bruteforce Method Done------------============
+
+
+For Test Cases of campers 1 to 10---Best Time according to Greedy Algorithm ===
+[182, 159]
+For Test Cases of campers 1 to 10---Best Time according to BruteForce Method======
+[182, 159]
+
+The Designed Algorithm is giving us the correct ans
+
+
+-------============ End of Greedy Algorithm ==============------ 
+
+
+=======-------------Bruteforce Method Done------------============
+
+
+For Test Cases of campers 1 to 10---Best Time according to Greedy Algorithm ===
+[182, 159, 352]
+For Test Cases of campers 1 to 10---Best Time according to BruteForce Method======
+[182, 159, 352]
+
+The Designed Algorithm is giving us the correct ans
+
+
+-------============ End of Greedy Algorithm ==============------ 
+
+
+=======-------------Bruteforce Method Done------------============
+
+
+For Test Cases of campers 1 to 10---Best Time according to Greedy Algorithm ===
+[182, 159, 352, 331]
+For Test Cases of campers 1 to 10---Best Time according to BruteForce Method======
+[182, 159, 352, 331]
+
+The Designed Algorithm is giving us the correct ans
+
+
+-------============ End of Greedy Algorithm ==============------ 
+
+
+=======-------------Bruteforce Method Done------------============
+
+
+For Test Cases of campers 1 to 10---Best Time according to Greedy Algorithm ===
+[182, 159, 352, 331, 350]
+For Test Cases of campers 1 to 10---Best Time according to BruteForce Method======
+[182, 159, 352, 331, 350]
+
+The Designed Algorithm is giving us the correct ans
+
+
+-------============ End of Greedy Algorithm ==============------ 
+
+
+=======-------------Bruteforce Method Done------------============
+
+
+For Test Cases of campers 1 to 10---Best Time according to Greedy Algorithm ===
+[182, 159, 352, 331, 350, 210]
+For Test Cases of campers 1 to 10---Best Time according to BruteForce Method======
+[182, 159, 352, 331, 350, 210]
+
+The Designed Algorithm is giving us the correct ans
+
+
+-------============ End of Greedy Algorithm ==============------ 
+
+
+=======-------------Bruteforce Method Done------------============
+
+
+For Test Cases of campers 1 to 10---Best Time according to Greedy Algorithm ===
+[182, 159, 352, 331, 350, 210, 340]
+For Test Cases of campers 1 to 10---Best Time according to BruteForce Method======
+[182, 159, 352, 331, 350, 210, 340]
+
+The Designed Algorithm is giving us the correct ans
+
+
+-------============ End of Greedy Algorithm ==============------ 
+
+
+=======-------------Bruteforce Method Done------------============
+
+
+For Test Cases of campers 1 to 10---Best Time according to Greedy Algorithm ===
+[182, 159, 352, 331, 350, 210, 340, 382]
+For Test Cases of campers 1 to 10---Best Time according to BruteForce Method======
+[182, 159, 352, 331, 350, 210, 340, 382]
+
+The Designed Algorithm is giving us the correct ans
+
+
+-------============ End of Greedy Algorithm ==============------ 
+
+
+=======-------------Bruteforce Method Done------------============
+
+
+For Test Cases of campers 1 to 10---Best Time according to Greedy Algorithm ===
+[182, 159, 352, 331, 350, 210, 340, 382, 602]
+For Test Cases of campers 1 to 10---Best Time according to BruteForce Method======
+[182, 159, 352, 331, 350, 210, 340, 382, 602]
+
+The Designed Algorithm is giving us the correct ans
+
+
+-------============ End of Greedy Algorithm ==============------ 
+
+
+=======-------------Bruteforce Method Done------------============
+
+
+For Test Cases of campers 1 to 10---Best Time according to Greedy Algorithm ===
+[182, 159, 352, 331, 350, 210, 340, 382, 602, 365]
+For Test Cases of campers 1 to 10---Best Time according to BruteForce Method======
+[182, 159, 352, 331, 350, 210, 340, 382, 602, 365]
+
+The Designed Algorithm is giving us the correct ans
+
+
+
+
+ -------------- Testing the Time complexity of Greedy Algorithm -----------
+
