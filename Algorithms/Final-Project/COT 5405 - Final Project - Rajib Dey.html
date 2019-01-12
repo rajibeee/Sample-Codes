@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>LU Decomposition</title>
+</head>
+<body>
+    <h1><center>COT 5405 - Group Project </center></h1>
+    <h2><center>LU Decomposition </center></h2>
+    <h3><center> This page calculates 3x3, 4x4 and 5x5 LU Decomposition</center></h3>
+
+    <p id="output"></p>
+    <script>
+    function shownumbers3()
+    {
+        var x = document.getElementById("3by3");
+    var text = "";
+    var matrixarray=[];
+    var i;
+    for (i = 0; i < x.length ;i++) {
+        matrixarray.push(x.elements[i].value);
+        //text += x.elements[i].value + "<br>";
+    }
+
+        const m = [[matrixarray[0], matrixarray[1],matrixarray[2]], [matrixarray[3], matrixarray[4],matrixarray[5]], [matrixarray[6], matrixarray[7], matrixarray[8]]];
+
+        var [L,U] = LUDecomp(m);
+    
+        document.getElementById("output").innerHTML= " <b> The Matrix you entered looks like this =</b> " +"<br>" +
+        matrixarray[0] + "&emsp; " + matrixarray[1] + "&emsp;"+matrixarray[2] +"<br>" +
+        matrixarray[3] + " &emsp;" + matrixarray[4] + "&emsp; "+ matrixarray[5] + "<br>" +
+        matrixarray[6] + "&emsp; " + matrixarray[7] + "&emsp; "+ matrixarray[8] + "<br>" +
+        " <h3> <u> Upper Matrix Calculation</u>  </h3>" +
+        "For the First step, we do [2nd Row - ("+ matrixarray[3] + "/"+ matrixarray[0] + " x 1st row) ====> Row 2]"+ "<br>"  +
+        
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>" + "<br>" +
+        matrixarray[6] + "&emsp; " +  matrixarray[7] + "&emsp; "+  matrixarray[8] + "<br>" +
+        "For the 2nd step, we do [3rd Row - ("+ matrixarray[6]+"/"+ matrixarray[0] + " x 1st row) ====> Row 3]"+ "<br>"  +
+        
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) + "<br>" +
+       ( matrixarray[6]-(( matrixarray[6]/ matrixarray[0])* matrixarray[0])) +"&emsp; " + ( matrixarray[7]-(( matrixarray[6]/ matrixarray[0])* matrixarray[1])).toFixed(2) +"&emsp; " + ( matrixarray[8]-(( matrixarray[6]/ matrixarray[0])* matrixarray[2])).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>" + "<br>"  +
+       "For the 3rd step, we do [3rd Row - ("+ ((matrixarray[7]-((matrixarray[6]/matrixarray[0])*matrixarray[1]))/(U[1][1])).toFixed(2) + " x 2nd row) ====> Row 3]"+ "<br>"  +
+        
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) + "<br>" + 
+        U[2][0] +" &emsp;" + U[2][1] +"&emsp; " + (U[2][2]).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>" + "<br>" +
+        " --------------------- This is the final version of the Upper Matrix ------------------ " +
+        "<h3> <u> Lower Matrix Calculation</u>  </h3>" +
+        "After the First step, we put "+ matrixarray[3] + "/"+matrixarray[0] + " to Row 2, Column 1 Position"+ "<br>"  +
+        L[0][0] +"&emsp; " + L[0][1] +"&emsp; " + L[0][2] +"<br>" +
+        (matrixarray[3]/matrixarray[0]).toFixed(2) +"&emsp; " + (1-((matrixarray[3]/matrixarray[0])*0)) +"&emsp; " + (0-((matrixarray[3]/matrixarray[0])*0))+"<font size=5><font color=red><b> &lArr; </b></font></font>" +"<br>" +
+        0 +"&emsp; " + 0 +"&emsp; " + 1 + "<br>" +
+
+        "After the 2nd step, we put "+matrixarray[6]+"/"+matrixarray[0] + " to Row 3, Column 1 Position"+ "<br>"  +
+
+        L[0][0] +"&emsp; " + L[0][1] +"&emsp; " + L[0][2] +"<br>" +
+        (matrixarray[3]/matrixarray[0]).toFixed(2) +"&emsp; " + (1-((matrixarray[3]/matrixarray[0])*0)) +"&emsp; " + (0-((matrixarray[3]/matrixarray[0])*0)) +"<br>" +
+        (matrixarray[6]/matrixarray[0]).toFixed(2)+"&emsp; " +0+"&emsp; " + 1 +"<font size=5><font color=red><b> &lArr; </b></font></font>"+"<br>" +
+
+        "After the 3rd step, we put "+ ((matrixarray[7]-((matrixarray[6]/matrixarray[0])*matrixarray[1]))/(U[1][1])).toFixed(2) + " to Row 3, Column 2 Position]"+ "<br>"  +
+        L[0][0] +"&emsp; " + L[0][1] +"&emsp; " + L[0][2] +"<br>" +
+        (matrixarray[3]/matrixarray[0]).toFixed(2) +"&emsp; " + (1-((matrixarray[3]/matrixarray[0])*0)) +"&emsp; " + (0-((matrixarray[3]/matrixarray[0])*0)) +"<br>" +
+        (matrixarray[6]/matrixarray[0]).toFixed(2)+"&emsp; " + ((matrixarray[7]-((matrixarray[6]/matrixarray[0])*matrixarray[1]))/(U[1][1])).toFixed(2) +"&emsp; " + 1 +"<font size=5><font color=red><b> &lArr; </b></font></font>"+"<br>" +
+
+        "<h4 style='color:blue;'> <b><u>The Upper Matrix is = </u> </b></h4>" +
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) + "<br>" + 
+        U[2][0] +" &emsp;" + U[2][1] +"&emsp; " + (U[2][2]).toFixed(2) + "<br>" +
+        "<h4 style='color:blue;'> <b><u>The Lower Matrix is = </u> </b></h4>" +
+         L[0][0] +"&emsp; " + L[0][1] +"&emsp; " + L[0][2] +"<br>" +
+         (L[1][0]).toFixed(2) +"&emsp; " + (L[1][1]).toFixed(2) +"&emsp; " + L[1][2] + "<br>" + 
+         (L[2][0]).toFixed(2) +" &emsp;" + (L[2][1]).toFixed(2) +"&emsp; " + (L[2][2]).toFixed(2) + "<br>" ;
+
+    }
+    ////=======================================End of Show number 3 ======================================
+    function shownumbers4()
+    {
+        var x = document.getElementById("4by4");
+    var text = "";
+    var matrixarray=[];
+    var i;
+    for (i = 0; i < x.length ;i++) {
+        matrixarray.push(x.elements[i].value);
+        //text += x.elements[i].value + "<br>";
+    }
+
+        const m = [[matrixarray[0], matrixarray[1],matrixarray[2], matrixarray[3]],
+         [matrixarray[4],matrixarray[5], matrixarray[6], matrixarray[7]],
+         [matrixarray[8],matrixarray[9], matrixarray[10], matrixarray[11]],
+         [matrixarray[12], matrixarray[13], matrixarray[14],matrixarray[15]]];
+        
+        var [L,U] = LUDecomp(m);
+    
+        document.getElementById("output").innerHTML="<b>The Matrix you entered looks like this = </b>" +"<br>" +
+        matrixarray[0] + "&emsp; " + matrixarray[1] + "&emsp;"+matrixarray[2] + " &emsp;" + matrixarray[3] + "<br>" +
+        matrixarray[4] + "&emsp; " + matrixarray[5] + "&emsp;" + matrixarray[6] + "&emsp;" + matrixarray[7]  + "<br>" +
+        matrixarray[8] + "&emsp; " + matrixarray[9] + "&emsp;" + matrixarray[10] + "&emsp;" + matrixarray[11]  + "<br>" +
+        matrixarray[12] + "&emsp; " + matrixarray[13] + "&emsp;" + matrixarray[14] + "&emsp;" + matrixarray[15]  + "<br>" +
+         
+        " <h3> <u> Upper Matrix Calculation</u>  </h3>" +
+        "For the First step, we do [2nd Row - ("+ matrixarray[4] + "/"+matrixarray[0] + " x 1st row) ====> Row 2]"+ "<br>"  +
+        
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +" &emsp;" + U[0][3]+"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) +" &emsp;" + (U[1][3]).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>"+ "<br>" +
+        matrixarray[8] + "&emsp; " + matrixarray[9] + "&emsp; "+ matrixarray[10] + "&emsp; "+ matrixarray[11] + "<br>" +
+        matrixarray[12] + "&emsp; " + matrixarray[13] + "&emsp; "+ matrixarray[14] + "&emsp; "+ matrixarray[15] + "<br>" + "<br>" +
+        "For the 2nd step, we do [3rd Row - ("+matrixarray[8]+"/"+matrixarray[0] + " x 1st row) ====> Row 3]"+ "<br>"  +
+        
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +" &emsp;" + U[0][3] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) +" &emsp;" + (U[1][3]).toFixed(2)+ "<br>" +
+       (matrixarray[8]-((matrixarray[8]/matrixarray[0])*matrixarray[0])) +"&emsp; " + (matrixarray[9]-((matrixarray[8]/matrixarray[0])*matrixarray[1])).toFixed(2) +"&emsp; " + (matrixarray[10]-((matrixarray[8]/matrixarray[0])*matrixarray[2])).toFixed(2) +"&emsp; " + (matrixarray[11]-((matrixarray[8]/matrixarray[0])*matrixarray[3])).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>"+ "<br>"  +
+       matrixarray[12] + "&emsp; " + matrixarray[13] + "&emsp;" + matrixarray[14] + "&emsp;" + matrixarray[15] + "<br>" + "<br>" +
+
+       "For the 3rd step, we do [4th Row - ("+ (matrixarray[12]/matrixarray[0]).toFixed(2) + " x 1st row) ====> Row 4]"+ "<br>"  +
+
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +" &emsp;" + U[0][3] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) +" &emsp;" + (U[1][3]).toFixed(2)+ "<br>" +
+       (matrixarray[8]-((matrixarray[8]/matrixarray[0])*matrixarray[0])) +"&emsp; " + (matrixarray[9]-((matrixarray[8]/matrixarray[0])*matrixarray[1])).toFixed(2) +"&emsp; " + (matrixarray[10]-((matrixarray[8]/matrixarray[0])*matrixarray[2])).toFixed(2) +"&emsp; " + (matrixarray[11]-((matrixarray[8]/matrixarray[0])*matrixarray[3])).toFixed(2)+ "<br>"  +
+       (matrixarray[12]-(matrixarray[12]/matrixarray[0])*matrixarray[0])+"&emsp; " + (matrixarray[13]-(matrixarray[12]/matrixarray[0])*matrixarray[1]).toFixed(2)+"&emsp; " + (matrixarray[14]-(matrixarray[12]/matrixarray[0])*matrixarray[2]).toFixed(2)+"&emsp; " + (matrixarray[15]-(matrixarray[12]/matrixarray[0])*matrixarray[3]).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>" +"<br>"  +"<br>"  +
+            
+       "For the 4th step, we do [3rd Row - ("+ (((matrixarray[9]-((matrixarray[8]/matrixarray[0])*matrixarray[1])).toFixed(2))/((U[1][1]).toFixed(2))).toFixed(2) + " x 2nd row) ====> Row 3]"+ "<br>"  +
+        
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +" &emsp;" + U[0][3] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) +" &emsp;" + (U[1][3]).toFixed(2)+ "<br>" +
+        0 +"&emsp; " + 0 +" &emsp;" + (((matrixarray[10]-((matrixarray[8]/matrixarray[0])*matrixarray[2])).toFixed(2))-(((matrixarray[9]-((matrixarray[8]/matrixarray[0])*matrixarray[1])).toFixed(2))/((U[1][1]).toFixed(2))*(U[1][2]).toFixed(2))).toFixed(2) +" &emsp;" + (((matrixarray[11]-((matrixarray[8]/matrixarray[0])*matrixarray[3])).toFixed(2))-(((matrixarray[9]-((matrixarray[8]/matrixarray[0])*matrixarray[1])).toFixed(2))/((U[1][1]).toFixed(2))*(U[1][3]).toFixed(2))).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>" + "<br>" +
+        0+"&emsp; " + (matrixarray[13]-(matrixarray[12]/matrixarray[0])*matrixarray[1]).toFixed(2)+"&emsp; " + (matrixarray[14]-(matrixarray[12]/matrixarray[0])*matrixarray[2]).toFixed(2)+"&emsp; " + (matrixarray[15]-(matrixarray[12]/matrixarray[0])*matrixarray[3]).toFixed(2) +"<br>"  +"<br>"  +
+       
+
+        "For the 5th step, we do [4th Row - ("+ ((matrixarray[13]-(matrixarray[12]/matrixarray[0])*matrixarray[1])/(U[1][1]).toFixed(2)).toFixed(2) + " x 2nd row) ====> Row 4]"+ "<br>"  +
+        
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +" &emsp;" + U[0][3] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) +" &emsp;" + (U[1][3]).toFixed(2)+ "<br>" +
+        0 +"&emsp; " + 0 +" &emsp;" + (((matrixarray[10]-((matrixarray[8]/matrixarray[0])*matrixarray[2])).toFixed(2))-(((matrixarray[9]-((matrixarray[8]/matrixarray[0])*matrixarray[1])).toFixed(2))/((U[1][1]).toFixed(2))*(U[1][2]).toFixed(2))).toFixed(2) +" &emsp;" + (((matrixarray[11]-((matrixarray[8]/matrixarray[0])*matrixarray[3])).toFixed(2))-(((matrixarray[9]-((matrixarray[8]/matrixarray[0])*matrixarray[1])).toFixed(2))/((U[1][1]).toFixed(2))*(U[1][3]).toFixed(2))).toFixed(2) + "<br>" +
+        0 +"&emsp; " + 0 +" &emsp;" + ((matrixarray[14]-(matrixarray[12]/matrixarray[0])*matrixarray[2])-(((matrixarray[13]-(matrixarray[12]/matrixarray[0])*matrixarray[1])/(U[1][1]).toFixed(2))*(U[1][2]).toFixed(2))).toFixed(2)+" &emsp;" + ((matrixarray[15]-(matrixarray[12]/matrixarray[0])*matrixarray[3])-((matrixarray[13]-(matrixarray[12]/matrixarray[0])*matrixarray[1])/(U[1][1]).toFixed(2))*(U[1][3]).toFixed(2)).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>"+ "<br>" +
+        
+        "For the 6th step, we do [4th Row - ("+ ((((matrixarray[14]-(matrixarray[12]/matrixarray[0])*matrixarray[2])-(((matrixarray[13]-(matrixarray[12]/matrixarray[0])*matrixarray[1])/(U[1][1]).toFixed(2))*(U[1][2]).toFixed(2))).toFixed(2))/(((matrixarray[10]-((matrixarray[8]/matrixarray[0])*matrixarray[2])).toFixed(2))-((((matrixarray[9]-((matrixarray[8]/matrixarray[0])*matrixarray[1])).toFixed(2))/((U[1][1]).toFixed(2))*(U[1][2]).toFixed(2))).toFixed(2))).toFixed(2) + " x 3rd row) ====> Row 4]"+ "<br>"  +
+        
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] + " &emsp;" + U[0][3] + "<br>" +
+        0 +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) +" &emsp;" + U[1][3].toFixed(2) + "<br>" + 
+        0 +" &emsp;" + U[2][1] +"&emsp; " + (U[2][2]).toFixed(2) +" &emsp;" + U[2][3].toFixed(2)+  "<br>" +
+        0 +" &emsp;" + 0 +"&emsp; " + (U[3][2]).toFixed(2) +" &emsp;" + U[3][3].toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>" + "<br>" + "<br>" +
+
+
+        " --------------------- This is the final version of the Upper Matrix ------------------ " +
+
+        "<h4 style='color:blue;'> <b><u>The Upper Matrix is = </u> </b></h4>" +
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] + " &emsp;" + U[0][3] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) + " &emsp;" + (U[1][3]).toFixed(2) + "<br>" + 
+        U[2][0] +" &emsp;" + U[2][1] +"&emsp; " + (U[2][2]).toFixed(2) +" &emsp;" + (U[2][3]).toFixed(2)+ "<br>" +
+        U[3][0] +" &emsp;" + U[3][1] +"&emsp; " + (U[3][2]).toFixed(2) +" &emsp;" + (U[3][3]).toFixed(2)+ "<br>" +
+        "<h4 style='color:blue;'> <b><u>The Lower Matrix is = </u> </b></h4>" +
+         L[0][0] +"&emsp; " + L[0][1] +"&emsp; " + L[0][2] + "&emsp; " + L[0][3] +"<br>" +
+         (L[1][0]).toFixed(2) +"&emsp; " + (L[1][1]).toFixed(2) +"&emsp; " + L[1][2] + "&emsp; " + L[1][3] +"<br>" + 
+         (L[2][0]).toFixed(2) +" &emsp;" + (L[2][1]).toFixed(2) +"&emsp; " + (L[2][2]).toFixed(2) + "&emsp; " + L[2][3] +"<br>" +
+         (L[3][0]).toFixed(2) +" &emsp;" + (L[3][1]).toFixed(2) +"&emsp; " + (L[3][2]).toFixed(2) + "&emsp; " + (L[3][3]).toFixed(2) +"<br>" ;
+    }
+    //// ____ -------================------------==============------------- End of Show number 4 -----------------------
+
+      function shownumbers5()
+    {
+        var x = document.getElementById("5by5");
+    var text = "";
+    var matrixarray=[];
+    var i;
+    for (i = 0; i < x.length ;i++) {
+        matrixarray.push(x.elements[i].value);
+        //text += x.elements[i].value + "<br>";
+    }
+        const m = [[matrixarray[0], matrixarray[1],matrixarray[2], matrixarray[3], matrixarray[4]],
+        [matrixarray[5], matrixarray[6],matrixarray[7], matrixarray[8], matrixarray[9]],
+        [matrixarray[10], matrixarray[11],matrixarray[12], matrixarray[13], matrixarray[14]],
+        [matrixarray[15], matrixarray[16],matrixarray[17], matrixarray[18], matrixarray[19]],
+        [matrixarray[20], matrixarray[21],matrixarray[22], matrixarray[23], matrixarray[24]]];
+        
+        var [L,U] = LUDecomp(m);
+    
+        document.getElementById("output").innerHTML="The Matrix you entered looks like this = " +"<br>" +
+        matrixarray[0] + "&emsp; " + matrixarray[1] + "&emsp;"+matrixarray[2] + " &emsp;" +  matrixarray[3] + " &emsp;" + matrixarray[4] + "<br>" +
+        matrixarray[5] + "&emsp; " + matrixarray[6] + "&emsp;"+matrixarray[7] + " &emsp;" +  matrixarray[8] + " &emsp;" + matrixarray[9] + "<br>" +
+        matrixarray[10] + "&emsp; " + matrixarray[11] + "&emsp;"+matrixarray[12] + " &emsp;" +  matrixarray[13] + " &emsp;" + matrixarray[14] + "<br>" +
+        matrixarray[15] + "&emsp; " + matrixarray[16] + "&emsp;"+matrixarray[17] + " &emsp;" +  matrixarray[18] + " &emsp;" + matrixarray[19] + "<br>" +
+        matrixarray[20] + "&emsp; " + matrixarray[21] + "&emsp;"+matrixarray[22] + " &emsp;" +  matrixarray[23] + " &emsp;" + matrixarray[24] + "<br>" +"<br>" +
+        "<h4 style='color:blue;'> <b><u>The Upper Matrix is = </u> </b></h4>" +
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2]  +" &emsp;" + U[0][3]+ " &emsp;" + U[0][4] + "<br>" +
+        U[1][0] +"&emsp; " + U[1][1].toFixed(2) +" &emsp;" + U[1][2].toFixed(2)  +" &emsp;" + U[1][3].toFixed(2)+ " &emsp;" + U[1][4].toFixed(2) + "<br>" +
+        U[2][0] +"&emsp; " + U[2][1] +" &emsp;" + U[2][2].toFixed(2)  +" &emsp;" + U[2][3].toFixed(2)+ " &emsp;" + U[2][4].toFixed(2) + "<br>" +
+        U[3][0] +"&emsp; " + U[3][1] +" &emsp;" + U[3][2].toFixed(2)  +" &emsp;" + U[3][3].toFixed(2)+ " &emsp;" + U[3][4].toFixed(2) + "<br>" +
+        U[4][0] +"&emsp; " + U[4][1] +" &emsp;" + U[4][2]  +" &emsp;" + U[4][3]+ " &emsp;" + U[4][4].toFixed(2) + "<br>" +"<br>" +
+
+         "<h4 style='color:blue;'> <b><u>The Lower Matrix is = </u> </b></h4>" +
+        L[0][0] +"&emsp; " + L[0][1] +" &emsp;" + L[0][2]  +" &emsp;" + L[0][3]+ " &emsp;" + L[0][4] + "<br>" +
+        L[1][0].toFixed(2) +"&emsp; " + L[1][1] +" &emsp;" + L[1][2]  +" &emsp;" + L[1][3]+ " &emsp;" + L[1][4] + "<br>" +
+        L[2][0].toFixed(2) +"&emsp; " + L[2][1].toFixed(2) +" &emsp;" + L[2][2]  +" &emsp;" + L[2][3]+ " &emsp;" + L[2][4] + "<br>" +
+        L[3][0].toFixed(2) +"&emsp; " + L[3][1].toFixed(2) +" &emsp;" + L[3][2].toFixed(2)  +" &emsp;" + L[3][3]+ " &emsp;" + L[3][4] + "<br>" +
+        L[4][0].toFixed(2) +"&emsp; " + L[4][1].toFixed(2) +" &emsp;" + L[4][2].toFixed(2)  +" &emsp;" + L[4][3].toFixed(2)+ " &emsp;" + L[4][4] + "<br>" ;
+
+    }
+
+    ////// -----------------------------------------------------End of Show Number 5 ------------------------------------////
+        function randomMatrix3()
+        { 
+      var num1=getRandomInt(10);
+        var num2=getRandomInt(10);
+        var num3=getRandomInt(10);
+        var num4=getRandomInt(10);
+        var num5=getRandomInt(10);
+        var num6=getRandomInt(10);
+        var num7=getRandomInt(10);
+        var num8=getRandomInt(10);
+        var num9=getRandomInt(10);
+        const m = [[num1, num2, num3], [num4, num5, num6], [num7, num8, num9]];
+        var [L,U] = LUDecomp(m);
+    
+        
+        document.getElementById("output").innerHTML=" <b>Your Random matrix looks like this =</b>  " +"<br>" +
+        num1 + "&emsp; " + num2 + "&emsp;"+ num3 + "<br>" +
+        num4 + " &emsp;" + num5 + "&emsp; "+ num6 + "<br>" +
+        num7 + "&emsp; " + num8 + "&emsp; "+ num9 + "<br>" +"<br>" +
+        "<h3> <u> Upper Matrix Calculation</u>  </h3>" +
+        "For the First step, we do [2nd Row - ("+ num4 + "/"+num1 + " x 1st row) ====> Row 2]"+ "<br>"  +
+       
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>" + "<br>" +
+        num7 + "&emsp; " + num8 + "&emsp; "+ num9 + "<br>" +
+        "For the 2nd step, we do [3rd Row - ("+num7+"/"+num1 + " x 1st row) ====> Row 3]"+ "<br>"  +
+       
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) + "<br>" +
+       (num7-((num7/num1)*num1)) +"&emsp; " + (num8-((num7/num1)*num2)).toFixed(2) +"&emsp; " + (num9-((num7/num1)*num3)).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>" + "<br>"  +
+       "For the 3rd step, we do [3rd Row - ("+ ((num8-((num7/num1)*num2))/(U[1][1])).toFixed(2) + " x 2nd row) ====> Row 3]"+ "<br>"  +
+       
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) + "<br>" + 
+        U[2][0] +" &emsp;" + U[2][1] +"&emsp; " + (U[2][2]).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>" + "<br>" +
+        "<h3> <u> Lower Matrix Calculation</u>  </h3>" +
+        "After the First step, we put "+ num4 + "/"+num1 + " to Row 2, Column 1 Position"+ "<br>"  +
+        L[0][0] +"&emsp; " + L[0][1] +"&emsp; " + L[0][2] +"<br>" +
+        (num4/num1).toFixed(2) +"&emsp; " + (1-((num4/num1)*0)) +"&emsp; " + (0-((num4/num1)*0))+"<font size=5><font color=red><b> &lArr; </b></font></font>" +"<br>" +
+        0 +"&emsp; " + 0 +"&emsp; " + 1 + "<br>" +
+
+        "After the 2nd step, we put "+num7+"/"+num1 + " to Row 3, Column 1 Position"+ "<br>"  +
+
+        L[0][0] +"&emsp; " + L[0][1] +"&emsp; " + L[0][2] +"<br>" +
+        (num4/num1).toFixed(2) +"&emsp; " + (1-((num4/num1)*0)) +"&emsp; " + (0-((num4/num1)*0)) +"<br>" +
+        (num7/num1).toFixed(2)+"&emsp; " +0+"&emsp; " + 1 +"<font size=5><font color=red><b> &lArr; </b></font></font>"+"<br>" +
+
+        "After the 3rd step, we put "+ ((num8-((num7/num1)*num2))/(U[1][1])).toFixed(2) + " to Row 3, Column 2 Position"+ "<br>"  +
+        L[0][0] +"&emsp; " + L[0][1] +"&emsp; " + L[0][2] +"<br>" +
+        (num4/num1).toFixed(2) +"&emsp; " + (1-((num4/num1)*0)) +"&emsp; " + (0-((num4/num1)*0)) +"<br>" +
+        (num7/num1).toFixed(2)+"&emsp; " + ((num8-((num7/num1)*num2))/(U[1][1])).toFixed(2) +"&emsp; " + 1 +"<font size=5><font color=red><b> &lArr; </b></font></font>"+"<br>" +
+
+
+        "<h4 style='color:blue;'> <b><u>The Upper Matrix is = </u> </b></h4>" +
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) + "<br>" + 
+        U[2][0] +" &emsp;" + U[2][1] +"&emsp; " + (U[2][2]).toFixed(2) + "<br>" +
+        "<h4 style='color:blue;'> <b><u>The Lower Matrix is = </u> </b></h4>" +
+         L[0][0] +"&emsp; " + L[0][1] +"&emsp; " + L[0][2] +"<br>" +
+         (L[1][0]).toFixed(2) +"&emsp; " + (L[1][1]).toFixed(2) +"&emsp; " + L[1][2] + "<br>" + 
+         (L[2][0]).toFixed(2) +" &emsp;" + (L[2][1]).toFixed(2) +"&emsp; " + (L[2][2]).toFixed(2) + "<br>" ;
+
+        }
+       
+//// ================================= End of Random Matrix 3====================================
+
+function randomMatrix4()
+        { 
+        var num1=getRandomInt(10);
+        var num2=getRandomInt(10);
+        var num3=getRandomInt(10);
+        var num4=getRandomInt(10);
+        var num5=getRandomInt(10);
+        var num6=getRandomInt(10);
+        var num7=getRandomInt(10);
+        var num8=getRandomInt(10);
+        var num9=getRandomInt(10);
+        var num10=getRandomInt(10);
+        var num11=getRandomInt(10);
+        var num12=getRandomInt(10);
+        var num13=getRandomInt(10);
+        var num14=getRandomInt(10);
+        var num15=getRandomInt(10);
+        var num16=getRandomInt(10);
+     
+        const m = [[num1, num2, num3, num4], [num5,num6 ,num7, num8], [num9, num10,num11, num12],[num13, num14, num15,num16]]
+        //const m = [[1, 2, 3, 4], [5,6 ,7, 8], [9, 1,2, 3],[4, 5, 6,7]]
+        var [L,U] = LUDecomp(m);
+    
+    
+        
+        document.getElementById("output").innerHTML="<b>Your Random matrix looks like this =</b> " +"<br>" +
+        num1 + "&emsp; " + num2 + "&emsp;" + num3 + "&emsp;" + num4 + "<br>" +
+        num5 + "&emsp; " + num6 + "&emsp;" + num7 + "&emsp; " + num8 + "<br>" +
+        num9 + "&emsp; " + num10 + "&emsp;" + num11 + "&emsp;" + num12 + "<br>" +
+        num13 + "&emsp; " + num14 + "&emsp;" + num15 + "&emsp;" + num16 + "<br>" +
+        " <h3> <u> Upper Matrix Calculation</u>  </h3>" +
+        "For the First step, we do [2nd Row - ("+ num5 + "/"+num1 + " x 1st row) ====> Row 2]"+ "<br>"  +
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +" &emsp;" + U[0][3]+"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) +" &emsp;" + (U[1][3]).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>"+ "<br>" +
+        num9 + "&emsp; " + num10 + "&emsp; "+ num11 + "&emsp; "+ num12 + "<br>" +
+        num13 + "&emsp; " + num14 + "&emsp; "+ num15 + "&emsp; "+ num16 + "<br>" + "<br>" +
+        "For the 2nd step, we do [3rd Row - ("+num9+"/"+num1 + " x 1st row) ====> Row 3]"+ "<br>"  +
+        
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +" &emsp;" + U[0][3] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) +" &emsp;" + (U[1][3]).toFixed(2)+ "<br>" +
+       (num9-((num9/num1)*num1)) +"&emsp; " + (num10-((num9/num1)*num2)).toFixed(2) +"&emsp; " + (num11-((num9/num1)*num3)).toFixed(2) +"&emsp; " + (num12-((num9/num1)*num4)).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>"+ "<br>"  +
+       num13 + "&emsp; " + num14 + "&emsp;" + num15 + "&emsp;" + num16 + "<br>" + "<br>" +
+
+       "For the 3rd step, we do [4th Row - ("+ (num13/num1).toFixed(2) + " x 1st row) ====> Row 4]"+ "<br>"  +
+        
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +" &emsp;" + U[0][3] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) +" &emsp;" + (U[1][3]).toFixed(2)+ "<br>" +
+       (num9-((num9/num1)*num1)) +"&emsp; " + (num10-((num9/num1)*num2)).toFixed(2) +"&emsp; " + (num11-((num9/num1)*num3)).toFixed(2) +"&emsp; " + (num12-((num9/num1)*num4)).toFixed(2)+ "<br>"  +
+       (num13-(num13/num1)*num1)+"&emsp; " + (num14-(num13/num1)*num2).toFixed(2)+"&emsp; " + (num15-(num13/num1)*num3).toFixed(2)+"&emsp; " + (num16-(num13/num1)*num4).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>" +"<br>"  +"<br>"  +
+            
+       "For the 4th step, we do [3rd Row - ("+ (((num10-((num9/num1)*num2)).toFixed(2))/((U[1][1]).toFixed(2))).toFixed(2) + " x 2nd row) ====> Row 3]"+ "<br>"  +
+        
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +" &emsp;" + U[0][3] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) +" &emsp;" + (U[1][3]).toFixed(2)+ "<br>" +
+        0 +"&emsp; " + 0 +" &emsp;" + (((num11-((num9/num1)*num3)).toFixed(2))-(((num10-((num9/num1)*num2)).toFixed(2))/((U[1][1]).toFixed(2))*(U[1][2]).toFixed(2))).toFixed(2) +" &emsp;" + (((num12-((num9/num1)*num4)).toFixed(2))-(((num10-((num9/num1)*num2)).toFixed(2))/((U[1][1]).toFixed(2))*(U[1][3]).toFixed(2))).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>" + "<br>" +
+        0+"&emsp; " + (num14-(num13/num1)*num2).toFixed(2)+"&emsp; " + (num15-(num13/num1)*num3).toFixed(2)+"&emsp; " + (num16-(num13/num1)*num4).toFixed(2) +"<br>"  +"<br>"  +
+       
+
+        "For the 5th step, we do [4th Row - ("+ ((num14-(num13/num1)*num2)/(U[1][1]).toFixed(2)).toFixed(2) + " x 2nd row) ====> Row 4]"+ "<br>"  +
+       
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] +" &emsp;" + U[0][3] +"<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) +" &emsp;" + (U[1][3]).toFixed(2)+ "<br>" +
+        0 +"&emsp; " + 0 +" &emsp;" + (((num11-((num9/num1)*num3)).toFixed(2))-(((num10-((num9/num1)*num2)).toFixed(2))/((U[1][1]).toFixed(2))*(U[1][2]).toFixed(2))).toFixed(2) +" &emsp;" + (((num12-((num9/num1)*num4)).toFixed(2))-(((num10-((num9/num1)*num2)).toFixed(2))/((U[1][1]).toFixed(2))*(U[1][3]).toFixed(2))).toFixed(2) + "<br>" +
+        0 +"&emsp; " + 0 +" &emsp;" + ((num15-(num13/num1)*num3)-(((num14-(num13/num1)*num2)/(U[1][1]).toFixed(2))*(U[1][2]).toFixed(2))).toFixed(2)+" &emsp;" + ((num16-(num13/num1)*num4)-((num14-(num13/num1)*num2)/(U[1][1]).toFixed(2))*(U[1][3]).toFixed(2)).toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>"+ "<br>" +
+        
+        "For the 6th step, we do [4th Row - ("+ ((((num15-(num13/num1)*num3)-(((num14-(num13/num1)*num2)/(U[1][1]).toFixed(2))*(U[1][2]).toFixed(2))).toFixed(2))/(((num11-((num9/num1)*num3)).toFixed(2))-(((num10-((num9/num1)*num2)).toFixed(2))/((U[1][1]).toFixed(2))*(U[1][2]).toFixed(2))).toFixed(2)).toFixed(2)   + " x 3rd row) ====> Row 4]"+ "<br>"  +
+        
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] + " &emsp;" + U[0][3] + "<br>" +
+        0 +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) +" &emsp;" + U[1][3].toFixed(2) + "<br>" + 
+        0 +" &emsp;" + U[2][1] +"&emsp; " + (U[2][2]).toFixed(2) +" &emsp;" + U[2][3].toFixed(2)+  "<br>" +
+        0 +" &emsp;" + 0 +"&emsp; " + (U[3][2]).toFixed(2) +" &emsp;" + U[3][3].toFixed(2)+ "<font size=5><font color=red><b> &lArr; </b></font></font>" + "<br>" +
+
+        " --------------------- This is the final version of the Upper Matrix ------------------ " +
+
+        "<h4 style='color:blue;'> <b><u>The Upper Matrix is = </u> </b></h4>" +
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2] + " &emsp;" + U[0][3] + "<br>" +
+        U[1][0] +"&emsp; " + (U[1][1]).toFixed(2) +" &emsp;" + (U[1][2]).toFixed(2) +" &emsp;" + U[1][3].toFixed(2) + "<br>" + 
+        U[2][0] +" &emsp;" + U[2][1] +"&emsp; " + (U[2][2]).toFixed(2) +" &emsp;" + U[2][3].toFixed(2)+  "<br>" +
+        U[3][0] +" &emsp;" + U[3][1] +"&emsp; " + (U[3][2]).toFixed(2) +" &emsp;" + U[3][3].toFixed(2) + "<br>" +
+        "<h4 style='color:blue;'> <b><u>The Lower Matrix is = </u> </b></h4>" +
+         L[0][0] +"&emsp; " + L[0][1] +" &emsp;" + L[0][2] + " &emsp;" + L[0][3] + "<br>" +
+        L[1][0].toFixed(2) +"&emsp; " + (L[1][1]) +" &emsp;" + (L[1][2]).toFixed(2) +" &emsp;" + L[1][3] +  "<br>" + 
+        L[2][0].toFixed(2) +" &emsp;" + L[2][1].toFixed(2) +"&emsp; " + (L[2][2]) +" &emsp;" + L[2][3] +  "<br>" +
+        L[3][0].toFixed(2) +" &emsp;" + L[3][1].toFixed(2) +"&emsp; " + (L[3][2]).toFixed(2) +" &emsp;" + L[3][3] +  "<br>"  ;
+
+        }
+
+        ////==================================End of Random Matrix 4 ====================================================
+
+        function randomMatrix5()
+        { 
+        
+        var num1=getRandomInt(10);
+        var num2=getRandomInt(10);
+        var num3=getRandomInt(10);
+        var num4=getRandomInt(10);
+        var num5=getRandomInt(10);
+        var num6=getRandomInt(10);
+        var num7=getRandomInt(10);
+        var num8=getRandomInt(10);
+        var num9=getRandomInt(10);
+        var num10=getRandomInt(10);
+        var num11=getRandomInt(10);
+        var num12=getRandomInt(10);
+        var num13=getRandomInt(10);
+        var num14=getRandomInt(10);
+        var num15=getRandomInt(10);
+        var num16=getRandomInt(10);
+        var num17=getRandomInt(10);
+        var num18=getRandomInt(10);
+        var num19=getRandomInt(10);
+        var num20=getRandomInt(10);
+        var num21=getRandomInt(10);
+        var num22=getRandomInt(10);
+        var num23=getRandomInt(10);
+        var num24=getRandomInt(10);
+        var num25=getRandomInt(10);
+        
+        const m = [[num1, num2, num3, num4, num5],[num6 ,num7, num8, num9, num10],[num11, num12, num13, num14, num15],
+        [num16, num17, num18, num19, num20],[num21, num22, num23, num24, num25]];
+        var [L,U] = LUDecomp(m);
+    
+        document.getElementById("output").innerHTML="<b>Your Random Matrix looks like this =</b> " +"<br>" +
+        num1+ "&emsp; " + num2+ "&emsp; " + num3+ "&emsp; " + num4+ "&emsp; " + num5 + "<br>" +
+        num6+ "&emsp; " + num7+ "&emsp; " + num8+ "&emsp; " + num9+ "&emsp; " + num10 + "<br>" +
+        num11+ "&emsp; " + num12+ "&emsp; " + num13+ "&emsp; " + num14+ "&emsp; " + num15 + "<br>" +
+        num16+ "&emsp; " + num17+ "&emsp; " + num18+ "&emsp; " + num19+ "&emsp; " + num20 + "<br>" +
+        num21+ "&emsp; " + num22+ "&emsp; " + num23+ "&emsp; " + num24+ "&emsp; " + num25 + "<br>" +"<br>" +
+        
+        "<h4 style='color:blue;'> <b><u>The Upper Matrix is = </u> </b></h4>" +
+        U[0][0] +"&emsp; " + U[0][1] +" &emsp;" + U[0][2]  +" &emsp;" + U[0][3]+ " &emsp;" + U[0][4] + "<br>" +
+        U[1][0] +"&emsp; " + U[1][1].toFixed(2) +" &emsp;" + U[1][2].toFixed(2)  +" &emsp;" + U[1][3].toFixed(2)+ " &emsp;" + U[1][4].toFixed(2) + "<br>" +
+        U[2][0] +"&emsp; " + U[2][1] +" &emsp;" + U[2][2].toFixed(2)  +" &emsp;" + U[2][3].toFixed(2)+ " &emsp;" + U[2][4].toFixed(2) + "<br>" +
+        U[3][0] +"&emsp; " + U[3][1] +" &emsp;" + U[3][2].toFixed(2)  +" &emsp;" + U[3][3].toFixed(2)+ " &emsp;" + U[3][4].toFixed(2) + "<br>" +
+        U[4][0] +"&emsp; " + U[4][1] +" &emsp;" + U[4][2]  +" &emsp;" + U[4][3]+ " &emsp;" + U[4][4].toFixed(2) + "<br>" +"<br>" +
+
+         "<h4 style='color:blue;'> <b><u>The Lower Matrix is = </u> </b></h4>" +
+        L[0][0] +"&emsp; " + L[0][1] +" &emsp;" + L[0][2]  +" &emsp;" + L[0][3]+ " &emsp;" + L[0][4] + "<br>" +
+        L[1][0].toFixed(2) +"&emsp; " + L[1][1] +" &emsp;" + L[1][2]  +" &emsp;" + L[1][3]+ " &emsp;" + L[1][4] + "<br>" +
+        L[2][0].toFixed(2) +"&emsp; " + L[2][1].toFixed(2) +" &emsp;" + L[2][2]  +" &emsp;" + L[2][3]+ " &emsp;" + L[2][4] + "<br>" +
+        L[3][0].toFixed(2) +"&emsp; " + L[3][1].toFixed(2) +" &emsp;" + L[3][2].toFixed(2)  +" &emsp;" + L[3][3]+ " &emsp;" + L[3][4] + "<br>" +
+        L[4][0].toFixed(2) +"&emsp; " + L[4][1].toFixed(2) +" &emsp;" + L[4][2].toFixed(2)  +" &emsp;" + L[4][3].toFixed(2)+ " &emsp;" + L[4][4] + "<br>" ;
+
+        }
+
+        ////// ====================================== End of Random Matrix 5 =======================================
+
+
+function getRandomInt(max) { // Gets a random number for the given variable
+    document.getElementById("output").innerHTML="----------------------------Inside Random Integer " +"<br>" ;
+  return Math.floor(Math.random() * Math.floor(max)+1); // Get a random number from 1 to max
+}
+
+function resetTable() {
+    document.getElementById("3by3").reset();
+    document.getElementById("4by4").reset();
+    document.getElementById("5by5").reset();
+}
+//------------ Reset table function ends ---------------------------------------
+//function to get highest common factor of two numbers (a fraction)
+function HCF(u, v) { 
+    var U = u, V = v
+    while (true) {
+        if (!(U%=V)) return V
+        if (!(V%=U)) return U 
+    } 
+}
+//convert a decimal into a fraction
+function fraction(decimal){
+
+    if(!decimal){
+        decimal=this; }
+    whole = String(decimal).split('.')[0];
+    decimal = parseFloat("."+String(decimal).split('.')[1]);
+    num = "1";
+    for(z=0; z<String(decimal).length-2; z++){
+        num += "0"; }
+    decimal = decimal*num;
+    num = parseInt(num);
+    for(z=2; z<decimal+1; z++){
+        if(decimal%z==0 && num%z==0){
+            decimal = decimal/z;
+            num = num/z;
+            z=2; }
+    }
+    //if format of fraction is xx/xxx
+    if (decimal.toString().length == 2 && 
+        num.toString().length == 3) {
+            //reduce by removing trailing 0's
+    decimal = Math.round(Math.round(decimal)/10);
+    num = Math.round(Math.round(num)/10);
+}
+//if format of fraction is xx/xx
+else if (decimal.toString().length == 2 && 
+        num.toString().length == 2) {
+    decimal = Math.round(decimal/10);
+    num = Math.round(num/10);
+}
+//get highest common factor to simplify
+var t = HCF(decimal, num);
+//return the fraction after simplifying it
+if(isNaN(whole) === true)
+{whole = "0";}
+if(isNaN(decimal) === true)
+{return ((whole==0)?"0" : whole);}
+else
+{return ((whole==0)?"0 " : whole+" ")+decimal/t+"/"+num/t;}}
+
+//------------------------------ Decompostion function starts-------------------------------
+function LUDecomp(A) {
+//var A = [[2,7,6,2],[9,5,1,3],[4,3,8,4],[5,6,7,8]];
+var N = A.length; 
+var L = [];
+var U = [];
+
+///Initializing the variable for all the matrix points
+//L[0][0]=L[1][1]=L[2][2]=1;
+//L[0][1]= L[0][2]=L[1][0]=L[1][2] =L[2][0] = L[2][1]=0; 
+
+function identity(N) { // returns an NxN identity matrix
+  var I = [];
+  for (j=0; j<N; j++) {
+    I[j] = new Array(N);
+    for (k=0; k<N; k++) {
+      I[j][k] = 0;
+    }
+    I[j][j] = 1;
+  }
+  return I;
+}
+
+L = identity(N);
+U = identity(N);
+
+  for (i=0; i<N; i++) { 
+    j = i;
+    while (j<N) { //Determine U across row i
+      q = 0;
+      U[i][j] = A[i][j];
+      while (q<i) {
+        U[i][j] -= L[i][q]*U[q][j];
+        q++;
+      } 
+      j++;
+    }
+    j = i+1;
+    while (j<N) { //Determine L down column i
+      q = 0;
+      L[j][i] = A[j][i];
+      while (q<i) {
+        L[j][i] -= L[j][q]*U[q][i];
+        q++;
+      } 
+      L[j][i] = L[j][i]/U[i][i];
+      j++;
+    } 
+  }
+
+
+//document.getElementById("output").innerHTML="L = " +"<br>" +  L + "<br>" + " U= " + "<br>" + U;
+return [L, U];
+}
+/// ------------------------------------------------------ End of LU Decomposition function ---------------
+    </script>
+  
+    <!-------------------------- Testing stuff under this---------------------------->
+    
+<form>
+    <font size=6><font color=red><b> Choose your preferred Matrix type </b></font></font> <br>
+    <input type="radio" id="showform" value="3" name="showform" onchange="showhideForm(this.value);"/><font size=6><font color=DEEPSKYBLUE><b> 3-by-3 </b></font></font>
+    <input type="radio" id="showform" value="4" name="showform" onchange="showhideForm(this.value);"/><font size=6><font color=ROYALBLUE><b> 4-by-4 </b></font></font>
+    <input type="radio" id="showform" value="5" name="showform" onchange="showhideForm(this.value);"/><font size=6><font color=MIDNIGHTBLUE><b> 5-by-5 </b></font></font>
+    </form>
+    
+    <script type="text/javascript">
+    function showhideForm(showform) {
+        if (showform == "3") {
+            document.getElementById("div1").style.display = 'block';
+            document.getElementById("div2").style.display = 'none';
+            document.getElementById("div3").style.display = 'none';
+        } 
+        if (showform == "4") {
+            document.getElementById("div2").style.display = 'block';
+            document.getElementById("div1").style.display = 'none';
+            document.getElementById("div3").style.display = 'none';
+        }
+        if (showform == "5") {
+            document.getElementById("div2").style.display = 'none';
+            document.getElementById("div1").style.display = 'none';
+            document.getElementById("div3").style.display = 'block';
+        }
+    }
+    </script>
+    
+    <div id="div1" style="display:none">
+        <form id ="3by3" name="3by3">
+            <table>
+               <tr>
+                  <td colspan="3">
+                  </td>
+               </tr>
+               <tr>
+                  <td><input type="text" id="num1"</td>
+                  <td><input type="text" id="num2"</td>
+                  <td><input type="text" id="num3"</td>
+               </tr>
+               <tr>
+                    <td><input type="text" id="num4"</td>
+                    <td><input type="text" id="num5"</td>
+                    <td><input type="text" id="num6"</td>
+               </tr>
+               <tr>
+                    <td><input type="text" id="num7"</td>
+                    <td><input type="text" id="num8"</td>
+                    <td><input type="text" id="num9"</td>
+               </tr>
+              
+            </table>
+            <input type="button" onclick="resetTable()" value="Reset the table">
+            <input type="button" onclick="shownumbers3()" value="Finalize & Calculate LU">
+            <input type="button" onclick="randomMatrix3()" value="Get a Random Matrix and Calculate LU">
+            
+            <!-------<button onclick="shownumbers()">Finalize & Calculate LU</button>
+                <button onclick="randomMatrix3()">Get a Random Matrix and Calculate LU</button>------>
+    </form>
+    </div>
+    <div id="div2" style="display:none">
+        <form id ="4by4" name="4x4">
+            <table>
+               <tr>
+                  <td colspan="4">
+                  </td>
+               </tr>
+               <tr>
+                  <td><input type="text" id="num1"</td>
+                  <td><input type="text" id="num2"</td>
+                  <td><input type="text" id="num3"</td>
+                  <td><input type="text" id="num4"</td>
+                  
+               </tr>
+               <tr>
+                <td><input type="text" id="num5"</td>
+                <td><input type="text" id="num6"</td>
+                <td><input type="text" id="num7"</td>
+                <td><input type="text" id="num8"</td>
+
+               </tr>
+               <tr>
+                <td><input type="text" id="num9"</td>
+                <td><input type="text" id="num10"</td>
+                <td><input type="text" id="num11"</td>
+                <td><input type="text" id="num12"</td>
+               </tr>
+            </tr>
+            <tr>
+             <td><input type="text" id="num13"</td>
+             <td><input type="text" id="num14"</td>
+             <td><input type="text" id="num15"</td>
+             <td><input type="text" id="num16"</td>
+            </tr>
+              
+            </table>
+            <br> <b>Only Upper Matrix steps be displayed.</b><br> <br>
+            <input type="button" onclick="resetTable()" value="Reset the table">
+            <input type="button" onclick="shownumbers4()" value="Finalize & Calculate LU">
+            <input type="button" onclick="randomMatrix4()" value="Get a Random Matrix and Calculate LU">
+    </form>
+    </div>
+    <div id="div3" style="display:none">
+        <form id ="5by5" name="5x5">
+            <table>
+               <tr>
+                  <td colspan="5">
+                  </td>
+               </tr>
+               <tr>
+                  <td><input type="text" id="num1"</td>
+                  <td><input type="text" id="num2"</td>
+                  <td><input type="text" id="num3"</td>
+                  <td><input type="text" id="num4"</td>
+                  <td><input type="text" id="num5"</td>
+                  
+               </tr>
+               <tr>
+                <td><input type="text" id="num6"</td>
+                <td><input type="text" id="num7"</td>
+                <td><input type="text" id="num8"</td>
+                <td><input type="text" id="num9"</td>
+                <td><input type="text" id="num10"</td>
+               </tr>
+               <tr>
+                <td><input type="text" id="num11"</td>
+                <td><input type="text" id="num12"</td>
+                <td><input type="text" id="num13"</td>
+                <td><input type="text" id="num14"</td>
+                <td><input type="text" id="num15"</td>
+               </tr>
+            </tr>
+            <tr>
+             <td><input type="text" id="num16"</td>
+             <td><input type="text" id="num17"</td>
+             <td><input type="text" id="num18"</td>
+             <td><input type="text" id="num19"</td>
+             <td><input type="text" id="num20"</td>
+            </tr>
+            <tr>
+                <td><input type="text" id="num21"</td>
+                <td><input type="text" id="num22"</td>
+                <td><input type="text" id="num23"</td>
+                <td><input type="text" id="num24"</td>
+                <td><input type="text" id="num25"</td>
+               </tr>
+              
+            </table>
+            <br> <b>A 5-by-5 LU Decomposition has approximatly 10 steps. For the sake of simplicity the steps will not be shown.</b><br> <br>
+            <input type="button" onclick="resetTable()" value="Reset the table">
+            <input type="button" onclick="shownumbers5()" value="Finalize & Calculate LU">
+            <input type="button" onclick="randomMatrix5()" value="Get a Random Matrix and Calculate LU">
+    </form>
+    </div>
+       
+<!-------------------------------------------- Testing stuff above it ------------------------------------->
+
+    
+    
+    
+   
+
+</body>
+
+</html>
