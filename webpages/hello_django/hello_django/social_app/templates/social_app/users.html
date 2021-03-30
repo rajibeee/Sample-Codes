@@ -1,0 +1,11 @@
+{%if user_list %}
+	<ul>
+		<h2> This is the user List</h2>
+	{% for user in user_list %}
+		<li> <a href="/social_app/users/{{user.first_name}}">{{user.first_name}}</a></li>
+		
+		{%endfor%}
+		</ul>
+		{%else%}
+		<p> No Such users are available</p>
+		{%endif%}
