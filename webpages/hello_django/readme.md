@@ -2,7 +2,11 @@
 '''sh
 python3 -m virtualenv env
 '''
-
+```sh
+cd dillinger
+npm i
+node app
+```
 2. Activate that virtualenv by source env/bin/activate
 3. then cd into the hello_django folder
 4. run  python manage.py runserver
