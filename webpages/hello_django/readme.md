@@ -1,4 +1,4 @@
-1. Create virtualenv by Activate virtualenv by doing '''python3 -m virtualenv env'''
+1. Create virtualenv by Activate virtualenv by doing 'python3 -m virtualenv env'
 
 2. Activate that virtualenv by source env/bin/activate
 3. then cd into the hello_django folder
